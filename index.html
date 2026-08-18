@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的世界 Minecraft TapTap 社群运营分析案</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --mc-green: #7cb94f;
+  --mc-green-dark: #4e8a33;
+  --mc-grass: #79c05a;
+  --mc-dirt: #b07a4d;
+  --mc-dirt-dark: #5b3a1e;
+  --mc-diamond: #54e8d4;
+  --mc-gold: #f8d34a;
+  --mc-bg: #10181a;
+  --mc-panel: #1d2825;
+  --mc-panel2: #25332f;
+  --mc-text: #d8d6c8;
+  --mc-dim: #9aa594;
+  --mc-red: #e0564a;
+}
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", -apple-system, sans-serif;
+  background: var(--mc-bg);
+  color: var(--mc-text);
+  line-height: 1.85;
+  overflow-x: hidden;
+}
+/* 像素描边工具类 */
+.px-border {
+  box-shadow:
+    0 3px 0 0 rgba(0,0,0,0.55),
+    0 -3px 0 0 rgba(255,255,255,0.06),
+    3px 0 0 0 rgba(0,0,0,0.4),
+    -3px 0 0 0 rgba(0,0,0,0.4);
+}
+.px-border-light {
+  box-shadow:
+    0 2px 0 0 rgba(255,255,255,0.08),
+    0 -2px 0 0 rgba(0,0,0,0.6),
+    2px 0 0 0 rgba(0,0,0,0.45),
+    -2px 0 0 0 rgba(0,0,0,0.45);
+}
+
+/* ===== Cover ===== */
+.cover {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; text-align: center; padding: 80px 40px 120px;
+  background:
+    radial-gradient(1px 1px at 12% 22%, rgba(255,255,255,0.8) 50%, transparent 51%),
+    radial-gradient(1px 1px at 28% 12%, rgba(255,255,255,0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 44% 32%, rgba(255,255,255,0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 58% 16%, rgba(255,255,255,0.8) 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 38%, rgba(255,255,255,0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 84% 24%, rgba(255,255,255,0.75) 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,0.6) 50%, transparent 51%),
+    radial-gradient(2px 2px at 20% 60%, rgba(255,255,255,0.12) 50%, transparent 51%),
+    radial-gradient(2px 2px at 65% 55%, rgba(255,255,255,0.1) 50%, transparent 51%),
+    linear-gradient(180deg, #0b1318 0%, #0e1a1c 55%, #12241f 100%);
+}
+/* 草方块地平线 */
+.cover .ground {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 96px;
+  background:
+    repeating-linear-gradient(90deg, var(--mc-grass) 0 60px, #6db24f 60px 120px);
+  box-shadow: inset 0 8px 0 0 var(--mc-green);
+}
+.cover .ground::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 20px;
+  background: repeating-linear-gradient(90deg, var(--mc-green) 0 60px, #6db24f 60px 120px);
+  box-shadow: inset 0 -4px 0 0 rgba(0,0,0,0.25);
+}
+.cover .ground .dirt {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 40px;
+  background: repeating-linear-gradient(90deg, var(--mc-dirt) 0 60px, #9c6a40 60px 120px);
+  box-shadow: inset 0 6px 0 0 rgba(0,0,0,0.3);
+}
+.cover-badge {
+  display: inline-block; padding: 10px 32px;
+  color: #0e1a1c; font-size: 14px; font-weight: 700; letter-spacing: 6px;
+  background: var(--mc-gold);
+  margin-bottom: 46px; position: relative; z-index: 2;
+  box-shadow: 0 4px 0 0 #8a6a1c, 0 -2px 0 0 rgba(255,255,255,0.3);
+}
+.cover h1 {
+  font-size: clamp(30px, 5.2vw, 54px); font-weight: 900; letter-spacing: 3px;
+  color: #ffffff; position: relative; z-index: 2; margin-bottom: 14px; line-height: 1.35;
+  text-shadow:
+    0 3px 0 var(--mc-green-dark),
+    0 6px 0 rgba(0,0,0,0.5),
+    0 0 24px rgba(124,185,79,0.25);
+}
+.cover h1 .mc-logo {
+  display: inline-block; color: var(--mc-gold);
+  text-shadow: 0 3px 0 #8a6a1c, 0 6px 0 rgba(0,0,0,0.5);
+}
+.cover .subtitle {
+  font-size: 16px; color: var(--mc-diamond); font-weight: 700; letter-spacing: 2px;
+  position: relative; z-index: 2; margin-bottom: 14px;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.6);
+}
+.cover .subtitle2 {
+  font-size: 13px; color: var(--mc-dim); letter-spacing: 1.5px;
+  position: relative; z-index: 2; margin-bottom: 40px;
+}
+.cover .divider {
+  width: 90px; height: 4px; position: relative; z-index: 2; margin: 0 auto 40px;
+  background: var(--mc-green);
+  box-shadow: 4px 0 0 0 var(--mc-green-dark), -4px 0 0 0 var(--mc-green-dark);
+}
+.cover .meta {
+  font-size: 13px; color: var(--mc-dim); letter-spacing: 1.5px;
+  position: relative; z-index: 2;
+}
+.cover .meta span { margin: 0 12px; }
+/* 苦力怕像素画装饰 */
+.creeper {
+  position: absolute; z-index: 1;
+  display: grid; grid-template-columns: repeat(8, 1fr);
+  width: 96px; height: 96px; image-rendering: pixelated; opacity: 0.16;
+}
+.creeper div { background: transparent; }
+.creeper .g { background: var(--mc-green); }
+.creeper .k { background: #10181a; }
+.cover .creeper-1 { left: 9%; top: 18%; }
+.cover .creeper-2 { right: 10%; bottom: 30%; width: 64px; height: 64px; }
+
+/* 草方块3D装饰 */
+.block3d {
+  position: absolute; z-index: 1; width: 52px; height: 46px;
+  transform: rotate(-8deg); opacity: 0.5;
+  background: linear-gradient(135deg, var(--mc-grass) 0 46%, var(--mc-dirt) 46% 100%);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+}
+.cover .block-1 { left: 16%; bottom: 18%; }
+.cover .block-2 { right: 18%; bottom: 26%; transform: rotate(6deg); }
+
+.wrapper { max-width: 920px; margin: 0 auto; padding: 0 32px 80px; }
+
+/* ===== TOC ===== */
+.toc {
+  background: var(--mc-panel); padding: 40px 48px; margin: 60px 0;
+  position: relative;
+  box-shadow: inset 0 0 0 4px var(--mc-green-dark), 0 8px 0 rgba(0,0,0,0.4);
+}
+.toc::before {
+  content: '章节索引'; display: inline-block;
+  font-size: 15px; letter-spacing: 6px; color: #0e1a1c; font-weight: 800;
+  background: var(--mc-gold); padding: 4px 16px; margin-bottom: 28px;
+  box-shadow: 0 3px 0 0 #8a6a1c;
+}
+.toc ol { list-style: none; counter-reset: toc; }
+.toc li { counter-increment: toc; margin-bottom: 10px; font-size: 14px; }
+.toc li::before {
+  content: counter(toc, decimal-leading-zero); color: var(--mc-gold);
+  margin-right: 16px; font-size: 12px; letter-spacing: 1px; font-weight: 700;
+}
+.toc a { color: var(--mc-text); text-decoration: none; transition: color 0.3s; border-bottom: 2px solid transparent; }
+.toc a:hover { color: var(--mc-diamond); border-bottom-color: var(--mc-diamond); }
+
+/* ===== Sections ===== */
+.section { margin-top: 70px; }
+.section h2 {
+  font-size: 22px; color: #ffffff; letter-spacing: 2px; padding-bottom: 16px;
+  border-bottom: 4px solid var(--mc-green-dark); margin-bottom: 30px;
+  display: flex; align-items: center; gap: 14px;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.6);
+}
+.section h2 .num {
+  font-size: 13px; color: #0e1a1c; font-weight: 800; letter-spacing: 0;
+  background: var(--mc-green); padding: 3px 12px;
+  box-shadow: 0 3px 0 0 var(--mc-green-dark);
+}
+.section h3 {
+  font-size: 17px; color: var(--mc-diamond); margin: 36px 0 16px; letter-spacing: 1px;
+  padding-left: 14px; border-left: 5px solid var(--mc-green);
+  text-shadow: 0 2px 0 rgba(0,0,0,0.5);
+}
+.section h4 {
+  font-size: 15px; color: var(--mc-gold); margin: 24px 0 10px; letter-spacing: 0.5px;
+}
+
+/* Body */
+p { margin-bottom: 18px; font-size: 15px; color: var(--mc-text); }
+p strong { color: #ffffff; }
+p em { color: var(--mc-diamond); font-style: normal; }
+
+/* Tables */
+table {
+  width: 100%; border-collapse: collapse; margin: 24px 0 32px;
+  font-size: 14px; background: var(--mc-panel);
+  border: 3px solid #000;
+  box-shadow: inset 0 0 0 3px var(--mc-green-dark);
+}
+thead th {
+  background: var(--mc-green-dark); color: #ffffff; padding: 12px 16px;
+  text-align: left; font-weight: 700; letter-spacing: 1px;
+  border-bottom: 3px solid #000;
+}
+tbody td {
+  padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); color: var(--mc-text);
+}
+tbody td:first-child { border-right: 1px solid rgba(255,255,255,0.08); }
+tbody tr:hover td { background: rgba(124,185,79,0.07); }
+tbody tr:last-child td { border-bottom: none; }
+
+/* Callout */
+.callout {
+  background: var(--mc-panel); border-left: 6px solid var(--mc-gold);
+  padding: 18px 24px; margin: 24px 0 30px; font-size: 14px; color: var(--mc-text);
+  line-height: 1.8; box-shadow: inset 0 0 0 2px var(--mc-panel2);
+}
+.callout em { color: var(--mc-diamond); font-style: normal; }
+.callout strong { color: var(--mc-gold); }
+
+/* Insight blocks */
+.insight {
+  background: var(--mc-panel); padding: 24px 28px; margin: 20px 0;
+  position: relative; border-top: 6px solid var(--mc-dirt);
+  box-shadow: inset 0 0 0 2px var(--mc-panel2), 0 6px 0 rgba(0,0,0,0.3);
+}
+.insight .tag {
+  display: inline-block; font-size: 11px; letter-spacing: 2px; color: #0e1a1c; font-weight: 700;
+  background: var(--mc-gold); padding: 2px 14px; margin-bottom: 10px;
+  box-shadow: 0 2px 0 0 #8a6a1c;
+}
+
+/* Lists */
+.bullet-list { list-style: none; margin: 16px 0 24px; }
+.bullet-list li {
+  font-size: 15px; color: var(--mc-text); margin-bottom: 12px; padding-left: 30px; position: relative;
+}
+.bullet-list li::before {
+  content: ''; position: absolute; left: 4px; top: 8px;
+  width: 10px; height: 10px; background: var(--mc-green);
+  box-shadow: 3px 3px 0 0 var(--mc-green-dark);
+}
+.num-list { list-style: none; counter-reset: item; margin: 16px 0 24px; }
+.num-list li {
+  counter-increment: item; font-size: 15px; color: var(--mc-text); margin-bottom: 18px;
+  padding-left: 40px; position: relative;
+}
+.num-list li::before {
+  content: counter(item, decimal-leading-zero); position: absolute; left: 0; top: 2px;
+  font-size: 13px; color: #0e1a1c; font-weight: 800; background: var(--mc-green);
+  padding: 1px 8px; box-shadow: 0 2px 0 0 var(--mc-green-dark);
+}
+
+/* Data card */
+.data-card {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; margin: 24px 0 32px;
+}
+.data-card .item {
+  background: var(--mc-panel); padding: 22px 16px; text-align: center;
+  border-top: 6px solid var(--mc-green);
+  box-shadow: inset 0 0 0 2px var(--mc-panel2), 0 6px 0 rgba(0,0,0,0.35);
+}
+.data-card .item .num {
+  font-size: 26px; color: var(--mc-gold); font-weight: 800; margin-bottom: 6px;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.5);
+}
+.data-card .item .label { font-size: 13px; color: var(--mc-dim); letter-spacing: 1px; }
+
+/* Emotion nodes */
+.emotion-node {
+  display: flex; align-items: flex-start; gap: 18px; margin-bottom: 18px;
+  padding: 16px 20px; background: var(--mc-panel);
+  border: 2px solid var(--mc-panel2); border-left: 6px solid var(--mc-diamond);
+  transition: border-color 0.3s, transform 0.2s;
+}
+.emotion-node:hover { border-color: var(--mc-green); transform: translateX(4px); }
+.emotion-node .icon {
+  width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 800; color: #0e1a1c; background: var(--mc-diamond);
+  box-shadow: 3px 3px 0 0 #1d7d70;
+}
+.emotion-node .content { flex: 1; }
+.emotion-node .label { font-size: 13px; color: var(--mc-gold); letter-spacing: 1px; margin-bottom: 4px; font-weight: 700; }
+.emotion-node .desc { font-size: 14px; color: var(--mc-text); line-height: 1.7; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 34px; margin: 24px 0; }
+.timeline::before {
+  content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
+  width: 4px; background: var(--mc-green-dark);
+}
+.timeline-item { position: relative; margin-bottom: 20px; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -29px; top: 6px;
+  width: 14px; height: 14px; background: var(--mc-gold);
+  box-shadow: 3px 3px 0 0 #8a6a1c;
+}
+.timeline-item .time {
+  display: inline-block; font-size: 12px; color: #0e1a1c; font-weight: 700;
+  background: var(--mc-diamond); padding: 1px 10px; letter-spacing: 1px; margin-bottom: 6px;
+  box-shadow: 0 2px 0 0 #1d7d70;
+}
+.timeline-item .title { font-size: 15px; color: #ffffff; font-weight: 700; margin-bottom: 4px; }
+.timeline-item .desc { font-size: 14px; color: var(--mc-dim); }
+
+/* Footer */
+.footer {
+  text-align: center; margin-top: 80px; padding-top: 30px;
+  border-top: 4px solid var(--mc-green-dark);
+  font-size: 12px; color: var(--mc-dim); letter-spacing: 2px;
+}
+
+.key-phrase {
+  background: linear-gradient(180deg, transparent 60%, rgba(124,185,79,0.25) 60%);
+  padding: 0 4px;
+}
+
+/* Quotes */
+blockquote {
+  border-left: 6px solid var(--mc-gold); margin: 20px 0; padding: 12px 20px;
+  background: var(--mc-panel); font-size: 14px; color: var(--mc-diamond); font-style: italic;
+  box-shadow: inset 0 0 0 2px var(--mc-panel2);
+}
+
+/* 底部苦力怕像素画 */
+.creeper-sm {
+  display: grid; grid-template-columns: repeat(8, 1fr);
+  width: 120px; height: 120px; margin: 40px auto 0; image-rendering: pixelated;
+}
+.creeper-sm div { background: transparent; }
+.creeper-sm .g { background: var(--mc-green); }
+.creeper-sm .k { background: #0b1012; }
+
+/* 顶部导航小钻石 */
+.diamond {
+  display: inline-block; width: 10px; height: 10px;
+  background: var(--mc-diamond); transform: rotate(45deg);
+  box-shadow: 2px 2px 0 0 #1d7d70;
+}
+
+@media (max-width: 768px) {
+  .wrapper { padding: 0 20px 60px; }
+  .toc { padding: 28px 24px; }
+  .cover { padding: 60px 24px 120px; }
+  table { font-size: 13px; }
+  thead th, tbody td { padding: 8px 10px; }
+  .data-card { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== COVER ========== -->
+<div class="cover">
+  <div class="creeper creeper-1">
+    <div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="k"></div><div class="k"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+  </div>
+  <div class="creeper creeper-2">
+    <div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="k"></div><div class="k"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+  </div>
+  <div class="block3d block-1"></div>
+  <div class="block3d block-2"></div>
+  <div class="cover-badge">社群运营分析</div>
+  <h1>我的世界 <span class="mc-logo">Minecraft</span><br>TapTap 社群运营深度拆解</h1>
+  <p class="subtitle">如何用「自由创造 + 无限UGC」运营亿级沙盒玩家生态</p>
+  <p class="subtitle2">解析 Mojang / 网易中国版 的玩家运营底层逻辑</p>
+  <div class="divider"></div>
+  <p class="meta"><span>2026年8月</span><span>·</span><span>社群运营分析案</span></p>
+  <div class="ground"><div class="dirt"></div></div>
+</div>
+
+<div class="wrapper">
+
+<!-- ========== TOC ========== -->
+<div class="toc">
+  <ol>
+    <li><a href="#s1">系列概览：我的世界中国版的 TapTap 数据全景</a></li>
+    <li><a href="#s2">社区内容结构：官方帖 × 玩家帖的生态分层</a></li>
+    <li><a href="#s3">官号运营策略：内容节奏与互动模型</a></li>
+    <li><a href="#s4">玩家分层与 UGC 驱动机制</a></li>
+    <li><a href="#s5">跨平台协同：TapTap → B站 → 抖音 → 微博的内容飞轮</a></li>
+    <li><a href="#s6">线下联动与 IP 破圈的价值闭环</a></li>
+    <li><a href="#s7">商业变现与社区体验的平衡艺术</a></li>
+    <li><a href="#s8">竞品对比：沙盒赛道社群运营差异化</a></li>
+    <li><a href="#s9">总结：可复用的社群运营方法论</a></li>
+    <li><a href="#s10">如果你是MC社群运营，会怎么做？</a></li>
+  </ol>
+</div>
+
+<!-- ========== S1 ========== -->
+<div class="section" id="s1">
+  <h2><span class="num">01</span> 系列概览：我的世界中国版的 TapTap 数据全景</h2>
+
+  <h3>1.1 产品基本信息</h3>
+  <table>
+    <thead><tr><th>项目</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>开发方 / 版权方</td><td>Mojang Studios（微软旗下），网易游戏代理中国版</td></tr>
+      <tr><td>游戏类型</td><td>开放世界沙盒 / 创造与生存（自由建造、探索、冒险）</td></tr>
+      <tr><td>中国版上线</td><td>2017 年 10 月全平台公测（PC Java + 手机版 + 主机版）</td></tr>
+      <tr><td>商业模式</td><td>免费下载 + 游戏内购（皮肤 / 组件 / 租赁服 / 会员特权）</td></tr>
+      <tr><td>核心平台</td><td>TapTap / 官网 / 各应用商店 / B站 / 抖音 / 微博</td></tr>
+      <tr><td>用户规模</td><td>中国版注册用户接近 3 亿（2026 年公开报道口径）</td></tr>
+      <tr><td>生态特色</td><td>高度自由 + 无限创造力，UGC（组件/皮肤/地图）构成核心护城河</td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.2 全球与中国版核心数据</h3>
+  <table>
+    <thead><tr><th>维度</th><th>数据</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>全球累计销量</td><td>3 亿+</td><td>史上销量最高的电子游戏之一（2023 年官方口径）</td></tr>
+      <tr><td>中国版注册用户</td><td>接近 3 亿</td><td>网易代理 7 年+，保持每年亿级增长（开发者大会口径）</td></tr>
+      <tr><td>UGC 创作团队</td><td>3000+</td><td>通过「创造者计划」入驻开发者平台的团队数量</td></tr>
+      <tr><td>TapTap 口碑</td><td>两极分化</td><td>玩家认可自由度与创造玩法，差评集中于运营与联机体验</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>核心现象：</strong>我的世界是全球销量最高的游戏，却在中国版面临「<em>口碑分化但生态长青</em>」的独特局面。TapTap 评分远低于纸嫁衣这类 9 分神作，但近 3 亿注册用户和 3000+ 创作团队证明了另一件事——<em>社群运营的核心指标不只是评分，更是生态的自我生长能力</em>。
+  </div>
+
+  <div class="data-card">
+    <div class="item"><div class="num">3 亿+</div><div class="label">全球累计销量</div></div>
+    <div class="item"><div class="num">≈3 亿</div><div class="label">中国版注册用户</div></div>
+    <div class="item"><div class="num">3000+</div><div class="label">UGC 创作团队</div></div>
+    <div class="item"><div class="num">7 年+</div><div class="label">中国版持续运营</div></div>
+  </div>
+</div>
+
+<!-- ========== S2 ========== -->
+<div class="section" id="s2">
+  <h2><span class="num">02</span> 社区内容结构：官方帖 × 玩家帖的生态分层</h2>
+
+  <h3>2.1 TapTap 论坛内容分类</h3>
+  <p>我的世界 TapTap 论坛的内容生态可以分为以下四层，与纸嫁衣的「叙事驱动」不同，MC 社区的核心驱动力是 <strong>「创造展示」</strong>：</p>
+
+  <table>
+    <thead><tr><th>内容层级</th><th>发布主体</th><th>典型内容</th><th>作用</th></tr></thead>
+    <tbody>
+      <tr><td><strong>官方公告层</strong></td><td>官方号</td><td>版本更新、活动通知、组件上新、开发者大会宣发</td><td>信息枢纽，承接全球版本与中国版运营节奏</td></tr>
+      <tr><td><strong>攻略互助层</strong></td><td>玩家KOL</td><td>生存开局教程、红石电路教学、建筑技巧、指令大全</td><td>降低新人生存门槛，把「劝退期」变成「上瘾期」</td></tr>
+      <tr><td><strong>创作展示层</strong></td><td>建筑党 / 红石党</td><td>大型建筑渲染图、红石机器演示、皮肤/组件展示</td><td>MC 社区的核心特色：用「作品」替代「话题」驱动讨论</td></tr>
+      <tr><td><strong>讨论水楼层</strong></td><td>全体玩家</td><td>服务器招人、版本吐槽、回忆杀、梗图二创</td><td>维持日常活跃度，沉淀「老玩家」情怀文化</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 官方帖类型拆解</h3>
+  <p>从 TapTap 官方号观察，我的世界中国版的官方帖主要分为以下几类：</p>
+
+  <div class="insight">
+    <div class="tag">帖子类型一</div>
+    <p style="margin-top:8px;"><strong>版本更新帖</strong>——跟随全球 Mojang 的版本节奏（如「洞穴与山崖」「荒野更新」）同步宣发，把国际版本的期待感「本地化」到中国版社区。同时结合国服特有的组件生态发布更新说明。</p>
+  </div>
+
+  <div class="insight">
+    <div class="tag">帖子类型二</div>
+    <p style="margin-top:8px;"><strong>组件上新帖</strong>——中国版特有的「组件商店」机制，官方会定期推荐新皮肤、新模组、新地图。这既是商业入口，也是社区内容的「官方扩音器」——把玩家的创作推上推荐位，形成创作-曝光-激励的闭环。</p>
+  </div>
+
+  <div class="insight">
+    <div class="tag">帖子类型三</div>
+    <p style="margin-top:8px;"><strong>活动赛事帖</strong>——建筑大赛、红石挑战、服务器活动招募。MC 的赛事天然适合「作品型」活动，玩家参赛即产出内容，一场比赛能同时拉动讨论、创作和拉新三个指标。</p>
+  </div>
+
+  <div class="insight">
+    <div class="tag">帖子类型四</div>
+    <p style="margin-top:8px;"><strong>联动与合作帖</strong>——与网易云音乐、电影 IP 等跨界联动的官宣。用外部流量反哺社区，让「MC 圈外人」第一次进入 TapTap 社区。</p>
+  </div>
+
+  <blockquote>
+    "别的游戏社区聊剧情、聊强度、聊抽卡；MC 社区聊建筑、聊红石、聊模组——玩家用作品说话，官方只需要搭好舞台。这种'内容由玩家生产'的模式，是 MC 运营七年仍能保持亿级增长的底层原因。"
+  </blockquote>
+</div>
+
+<!-- ========== S3 ========== -->
+<div class="section" id="s3">
+  <h2><span class="num">03</span> 官号运营策略：内容节奏与互动模型</h2>
+
+  <h3>3.1 内容发布节奏——「双轨制」运营</h3>
+  <p>我的世界中国版的社区节奏由 <strong>「全球版本轨」+「国服生态轨」</strong> 双线驱动：</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="time">全球轨 · 版本更新期</div>
+      <div class="title">新版本宣发与预下载</div>
+      <div class="desc">Mojang 发布新版本（每年 1-2 次大版本），官方同步发布中文介绍、新特性预览、版本更新公告。全球性的「新内容期待」为中国版社区注入天然的活跃周期。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">国服轨 · 组件上新</div>
+      <div class="title">组件商店定期上新</div>
+      <div class="desc">皮肤、模组、地图、玩法组件按周/月上新。官方用推荐位扶持优质创作者，社区则围绕新组件产生讨论和晒图。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">节点一 · 年度开发者大会</div>
+      <div class="title">创作者生态宣发</div>
+      <div class="desc">每年举办开发者大会，公布创作者数据、分成激励、新扶持计划。这是「生态向」的运营事件，目标人群是创作者而非泛用户。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">节点二 · 全球嘉年华</div>
+      <div class="title">Minecraft Live / 嘉年华转播</div>
+      <div class="desc">跟随全球 Minecon / Minecraft Live 节奏组织国内玩家观看、投票，形成「全球同频」的社区仪式感。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">节点三 · 跨界联动</div>
+      <div class="title">IP 联动事件</div>
+      <div class="desc">与网易云音乐、影视 IP、文创品牌等联动，用外部流量把「圈外人」引入 TapTap 社区。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">长草期</div>
+      <div class="title">服务器与建筑生态自发维持</div>
+      <div class="desc">版本空窗期，社区活跃由玩家自建的服务器、建筑作品、红石研究自发支撑——官方只需「偶尔下场点赞转发」。</div>
+    </div>
+  </div>
+
+  <h3>3.2 官方互动模型——「守夜人」人设</h3>
+  <p>我的世界中国版官方在社区的互动风格与纸嫁衣的「共情朋友」不同，更接近 <strong>「世界维护者 / 守夜人」</strong>：</p>
+  <ul class="bullet-list">
+    <li><strong>低姿态服务：</strong>官方自居「为大家守护这片世界的运营者」，多用「冒险家」称呼玩家，营造共同世界的代入感</li>
+    <li><strong>作品型激励：</strong>对优质建筑、红石作品、模组直接点赞/加精/推荐位，用「被官方翻牌」作为创作者的社交货币</li>
+    <li><strong>问题公开化：</strong>对外挂、租赁服质量、活动争议等问题发布处理公告，用流程化回应替代情绪化辩解</li>
+    <li><strong>情怀经营：</strong>周年庆、回忆杀内容反复强化「你在这个世界建造过的那些年」，维系老玩家的情感账户</li>
+  </ul>
+
+  <div class="callout">
+    <strong>关键洞察：</strong>MC 社区的本质是「<em>作品社区</em>」而非「话题社区」。官方运营的核心任务不是制造话题，而是维护创作环境——反外挂、扶持创作者、保障服务器体验。<em>玩家不是来聊天的，是来建造的</em>；官方管好「世界规则」，玩家自然会产出内容。这是与其他所有游戏社区最大的区别。
+  </div>
+</div>
+
+<!-- ========== S4 ========== -->
+<div class="section" id="s4">
+  <h2><span class="num">04</span> 玩家分层与 UGC 驱动机制</h2>
+
+  <h3>4.1 「我的世界型」玩家四层漏斗</h3>
+
+  <table>
+    <thead><tr><th>层级</th><th>用户画像</th><th>核心行为</th><th>社区价值</th></tr></thead>
+    <tbody>
+      <tr><td><strong>创造者层：开发者/建筑师</strong></td><td>参与创造者计划、发布组件/皮肤/地图，靠内容变现</td><td>制作模组、设计皮肤、搭建大型建筑、接商单</td><td>内容供给侧的核心，社区「商品」的制造者</td></tr>
+      <tr><td><strong>硬核层：红石党/技术党</strong></td><td>研究红石电路、指令、自动化农场、速通</td><td>发技术教程、分享原理图解、解答新人问题</td><td>内容深度供给者，塑造社区「硬核」心智</td></tr>
+      <tr><td><strong>活跃层：生存党/建筑爱好者</strong></td><td>长期在服务器生存、日常建造，参与活动不产内容</td><td>晒作品、玩服务器、参加建筑大赛、水群讨论</td><td>社区活跃度基石，服务器生态的参与者</td></tr>
+      <tr><td><strong>泛用户层：休闲玩家</strong></td><td>因同学推荐/短视频入坑，玩过一阵后间歇性回归</td><td>看攻略、玩别人的服务器、偶尔晒图、看二创</td><td>规模与拉新入口，长草期的流量基本盘</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 UGC 激励机制分析</h3>
+  <p>MC 对 UGC 的驱动不像纸嫁衣那样靠「叙事留白」，而是靠 <strong>「创作自由度 + 商业分成 + 展示舞台」</strong> 三位一体：</p>
+
+  <div class="emotion-node">
+    <div class="icon">由</div>
+    <div class="content">
+      <div class="label">绝对自由 → 激发创造欲</div>
+      <div class="desc">「想建什么就建什么」是 MC 最底层的心智。与多数游戏给玩家限定目标不同，MC 把「目标」完全交给玩家自己定义——建一座城堡、做一个自动农场、复刻一艘泰坦尼克。自由本身即最大的 UGC 引擎。</div>
+    </div>
+  </div>
+  <div class="emotion-node">
+    <div class="icon">分</div>
+    <div class="content">
+      <div class="label">商业分成 → 激发职业化</div>
+      <div class="desc">创造者计划让优秀创作者可以靠皮肤、模组、地图获得真实收入。当创作能「吃饭」，UGC 就从兴趣爱好升级为职业赛道——这是 3000+ 团队持续产出的经济基础。</div>
+    </div>
+  </div>
+  <div class="emotion-node">
+    <div class="icon">展</div>
+    <div class="content">
+      <div class="label">展示舞台 → 激发分享欲</div>
+      <div class="desc">建筑大赛、官方翻牌、推荐位、B站转播……每一条展示通道都在告诉创作者「你的作品值得被看见」。展示即激励，点赞即回报。</div>
+    </div>
+  </div>
+  <div class="emotion-node">
+    <div class="icon">联</div>
+    <div class="content">
+      <div class="label">服务器社交 → 激发驻留欲</div>
+      <div class="desc">服务器是 MC 的社交容器。和好友在同一个世界里生存、建房、互相串门，这种「共同世界的羁绊」让玩家的离开成本极高——不是舍不得游戏，是舍不得那个世界里的朋友。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== S5 ========== -->
+<div class="section" id="s5">
+  <h2><span class="num">05</span> 跨平台协同：TapTap → B站 → 抖音 → 微博的内容飞轮</h2>
+
+  <h3>5.1 各平台角色定位</h3>
+  <table>
+    <thead><tr><th>平台</th><th>核心角色</th><th>内容形态</th><th>官方运营强度</th></tr></thead>
+    <tbody>
+      <tr><td><strong>TapTap</strong></td><td>口碑与讨论大本营</td><td>评分管理、官方公告、攻略沉淀、组件推荐</td><td>⭐⭐⭐⭐ 重</td></tr>
+      <tr><td><strong>B站</strong></td><td>MC 内容第一阵地</td><td>生存实况、建筑展示、红石教程、模组测评</td><td>⭐⭐⭐⭐⭐ 最重</td></tr>
+      <tr><td><strong>抖音</strong></td><td>拉新破圈主战场</td><td>建筑过程短视频、模组玩法切片、服务器日常</td><td>⭐⭐⭐⭐ 快速增长</td></tr>
+      <tr><td><strong>微博</strong></td><td>话题引爆器</td><td>联动官宣、嘉年华直播、周年庆话题</td><td>⭐⭐⭐ 中等</td></tr>
+      <tr><td><strong>贴吧/QQ群</strong></td><td>核心粉自留地</td><td>服务器招人、资源分享、长篇教程、情怀讨论</td><td>⭐⭐ 玩家自治</td></tr>
+      <tr><td><strong>MC Wiki</strong></td><td>知识沉淀库</td><td>方块/生物/合成表/指令全收录</td><td>⭐⭐ 社区共建</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 内容飞轮模型</h3>
+  <p>我的世界跨平台运营的核心是一个<strong>双向循环</strong>：</p>
+
+  <div class="callout">
+    <strong>正向飞轮（拉新）：</strong><br>
+    抖音建筑/模组短视频 → 路人产生「我也要玩」的冲动 → 下载游戏 → 在 TapTap 看评分/攻略/组件 → 进入服务器 → 成为活跃玩家<br><br>
+    <strong>反向飞轮（留存→再传播）：</strong><br>
+    玩家在服务器建造作品 → 发到 B站/抖音 → 被官方翻牌或上推荐位 → 引发新一波讨论 → 吸引更多人入坑 → 新玩家成为新创作者
+  </div>
+
+  <p>与纸嫁衣「抖音接棒B站」的趋势不同，MC 的内容生态始终以 <strong>B站为深度阵地</strong>——建筑展示、红石教学这类「长内容」天然适配 B站的视频形态，而抖音负责把最刺激的「建筑过程」「模组玩法」切片传播给泛用户。两套平台角色分工明确，几乎不存在内容错位。</p>
+</div>
+
+<!-- ========== S6 ========== -->
+<div class="section" id="s6">
+  <h2><span class="num">06</span> 线下联动与 IP 破圈的价值闭环</h2>
+
+  <h3>6.1 关键线下/联动事件一览</h3>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="time">年度</div>
+      <div class="title">我的世界开发者大会</div>
+      <div class="desc">一年一度的创作者生态峰会，公布创作数据、分成政策、扶持计划。线下会场 + 线上直播，是「生态向」运营的标志性节点。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">年度</div>
+      <div class="title">Minecraft Live / 全球嘉年华</div>
+      <div class="desc">跟随全球节奏组织直播观看与生物投票，国内玩家与全球玩家同频狂欢，强化「全世界的冒险家」的身份认同。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">多次</div>
+      <div class="title">网易云音乐 × 我的世界联动</div>
+      <div class="desc">多次联合活动：万份钻石免费送、免费模组领取、音乐派对玩法。用网易生态内部的流量池做交叉导流。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">持续</div>
+      <div class="title">高校/教育场景渗透</div>
+      <div class="desc">编程教育（用 MC 学代码）、建筑美学课程等场景合作。沙盒游戏与教育的天然契合，让 MC 成为「家长不反对的游戏」。</div>
+    </div>
+  </div>
+
+  <h3>6.2 线下联动对 TapTap 社区的反哺</h3>
+  <ul class="bullet-list">
+    <li><strong>内容反哺：</strong>联动活动产出的截图、音乐、模组素材回流至 TapTap 论坛，形成「线上参与 → 线下体验 → 线上晒图」的 UGC 闭环</li>
+    <li><strong>身份认同：</strong>全球嘉年华、开发者大会的参与，让玩家获得「我是这个世界的一部分」的身份感，强化社区归属</li>
+    <li><strong>生态背书：</strong>与网易云音乐等大平台联动，本身就是对「中国版生态还在运营、还在投入」的市场化信号，安抚社区对「代理会不会跑路」的隐性焦虑</li>
+  </ul>
+
+  <div class="callout">
+    <strong>运营启示：</strong>与纸嫁衣「线下反哺情感」不同，MC 的线下联动更多承担「<em>生态信心管理</em>」的功能。近 3 亿注册用户意味着 MC 的核心挑战不是拉新而是 <em>维护「这个游戏还活着、还在更新」的确定性</em>——开发者大会和嘉年华，本质上是给玩家和创作者看的「长期主义宣言」。
+  </div>
+</div>
+
+<!-- ========== S7 ========== -->
+<div class="section" id="s7">
+  <h2><span class="num">07</span> 商业变现与社区体验的平衡艺术</h2>
+
+  <h3>7.1 变现模式的社区风险</h3>
+  <p>我的世界中国版采用 <strong>免费下载 + 游戏内购</strong> 模式，变现点包括：皮肤、组件（模组/地图）、租赁服、会员特权。与纸嫁衣的「广告打断沉浸」不同，MC 国服面临的核心争议是：<strong>「原版免费的内容，为什么要在中国版花钱？」</strong></p>
+
+  <p>在 TapTap 评论区，大量差评集中在：租赁服体验、外挂治理、氪金组件性价比、与国际版的版本同步速度。这些争议并非玩法问题，而是 <strong>「代理信任」</strong> 问题——玩家担心国服「变了味」。</p>
+
+  <h3>7.2 网易的应对策略</h3>
+
+  <table>
+    <thead><tr><th>策略</th><th>具体做法</th><th>社区效果</th></tr></thead>
+    <tbody>
+      <tr><td><strong>免费底座兜底</strong></td><td>核心玩法、基础皮肤、原版内容持续免费</td><td>守住「MC 就该免费玩」的玩家底线预期</td></tr>
+      <tr><td><strong>创造者分成生态</strong></td><td>组件收益与创作者分成，官方当「平台」而非「卖家」</td><td>把「氪金」重新定义为「支持创作者」</td></tr>
+      <tr><td><strong>版本同步承诺</strong></td><td>紧跟全球版本节奏更新，缩短与国际版差距</td><td>缓解「国服是阉割版」的核心焦虑</td></tr>
+      <tr><td><strong>外挂治理动作</strong></td><td>反外挂系统升级、处理公示、封禁公告</td><td>回应「环境差」差评，逐步修复信任</td></tr>
+      <tr><td><strong>方块守护模式</strong></td><td>面向未成年人的防沉迷/安全模式</td><td>降低家长顾虑，为「家庭教育场景」铺路</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>关键发现：</strong>MC 中国版的社区治理本质是「<em>信任修复工程</em>」。评分差并非因为游戏不好玩——相反，全球 3 亿销量证明玩法无可争议——而是玩家对「代理运营」的天然不信任。<em>每一次版本同步、每一次外挂处理公示，都是向社区提交的一次「信任存款」</em>。这是一个需要以年为单位计算的长期工程。
+  </div>
+</div>
+
+<!-- ========== S8 ========== -->
+<div class="section" id="s8">
+  <h2><span class="num">08</span> 竞品对比：沙盒赛道社群运营差异化</h2>
+
+  <h3>8.1 同赛道社群运营对比</h3>
+  <table>
+    <thead><tr><th>维度</th><th>我的世界中国版</th><th>迷你世界</th><th>泰拉瑞亚</th></tr></thead>
+    <tbody>
+      <tr><td><strong>IP 出身</strong></td><td>全球销量 3 亿+ 的国际顶级 IP</td><td>国产沙盒，早期曾陷版权争议</td><td>全球经典 2D 沙盒，口碑硬核</td></tr>
+      <tr><td><strong>社区心智</strong></td><td>「创造与自由」的原点，玩家自豪感强</td><td>「易上手+低龄化」的普惠路线</td><td>「硬核战斗+探索」的技术流社区</td></tr>
+      <tr><td><strong>UGC 体系</strong></td><td>创造者计划，3000+ 团队，分成成熟</td><td>迷你工坊，UGC 门槛低、量大</td><td>模组生态由社区自发维护，官方参与弱</td></tr>
+      <tr><td><strong>官方运营</strong></td><td>网易重投入，开发者大会/嘉年华/联动</td><td>活动频繁，绑定低龄社交场景</td><td>长期更新型，官方运营动作少</td></tr>
+      <tr><td><strong>核心挑战</strong></td><td>代理信任与口碑分化</td><td>原创性质疑与用户成长流失</td><td>内容门槛高，泛用户拓展难</td></tr>
+      <tr><td><strong>社区壁垒</strong></td><td>全球 IP 心智 + 创作分成生态 + 亿级规模</td><td>低龄社交关系链沉淀</td><td>硬核玩家忠诚度与内容深度</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.2 我的世界社群运营的核心壁垒</h3>
+  <p>不是版本、不是画面，而是 <strong>「全球 IP 心智 + 创作分成生态 + 亿级用户规模」</strong> 的系统性组合。单看任何一项，迷你世界都可以追赶；但「全世界销量第一的游戏」这一心智标签，加上 3000+ 已形成商业闭环的创作团队，构成了几乎无法复制的护城河。</p>
+</div>
+
+<!-- ========== S9 ========== -->
+<div class="section" id="s9">
+  <h2><span class="num">09</span> 总结：可复用的社群运营方法论</h2>
+
+  <ol class="num-list">
+    <li><strong>自由是最好的内容引擎。</strong> MC 没有主线剧情、没有强制目标，玩家却创造了 3 亿销量和近 3 亿国服用户的奇迹。社区运营的第一课：给用户自由表达的空间，胜过给用户填好的剧本。</li>
+    <li><strong>让创作者赚到钱，是 UGC 的终极激励。</strong> 兴趣只能支撑一时，分成能支撑一世。3000+ 创作团队的持续产出，靠的不是情怀，而是可预期的商业回报。</li>
+    <li><strong>展示即激励。</strong> 玩家作品被官方翻牌、上推荐位、登嘉年华，比发任何虚拟奖励都更能激发创作欲。「被看见」是创作者最稀缺的资源。</li>
+    <li><strong>社区的活跃度应该交给「作品周期」而非「话题周期」。</strong> 版本更新、组件上新、建筑大赛天然形成活跃波峰，官方不需要靠灌水维持热度，只需要管好节奏、维护环境。</li>
+    <li><strong>跨平台不是复制而是分工。</strong> B站深耕长内容、抖音切片拉新、TapTap 沉淀口碑、微博引爆话题——同一 IP 在不同平台承担不同角色，才是健康的矩阵。</li>
+    <li><strong>信任是代理制游戏最大的资产与负债。</strong> 口碑分化不是玩法的失败，而是信任的欠账。版本同步、外挂治理、坦诚沟通，每一项都是在为社区信任做复利存款。</li>
+    <li><strong>情怀是最低成本、最高回报的留存工具。</strong> 「你还记得那个和你一起撸树的伙伴吗」——七年老玩家的回忆杀，是任何投放都买不来的留存钩子。</li>
+  </ol>
+</div>
+
+<!-- ========== S10 ========== -->
+<div class="section" id="s10">
+  <h2><span class="num">10</span> 如果你是 MC 社群运营，会怎么做？</h2>
+
+  <h3>10.1 现有策略中值得坚守的</h3>
+  <ul class="bullet-list">
+    <li>免费底座不破防——「核心玩法永远免费」是国服最后的信任底线</li>
+    <li>创造者分成体系继续加码——创作者生态是国服区别于国际版的「本地化护城河」</li>
+    <li>版本同步节奏不放松——同步即信任，每一版延迟都是口碑的失血点</li>
+  </ul>
+
+  <h3>10.2 可以考虑优化的方向</h3>
+  <ul class="bullet-list">
+    <li><strong>TapTap 社区差异化经营：</strong>目前 TapTap 官方帖与公众号/官网内容重合度高。可以增设「TapTap 专属建筑展」「开发者日记」「废案/彩蛋展示」等独家内容，把 TapTap 变成国服玩家的「创作主场」</li>
+    <li><strong>口碑修复的系统工程：</strong>针对差评集中的租赁服、外挂问题，建立「月度治理报告」公开机制——把治理过程透明化，让社区看到「问题在被处理」，而不仅是看到「问题存在」</li>
+    <li><strong>低龄 → 成长用户的承接：</strong>迷你世界的经验表明，低龄用户会长大、会流失。MC 需要建立「青少年创作者计划」等高成长价值的用户承接路径，把小时候玩 MC 的人，培养成长大后做 MC 组件的人</li>
+    <li><strong>老玩家周期性召回：</strong>周年庆、新版本上线时策划「重开一个档」的回归活动，用「和当年的朋友再建一次家」的情感钩子召回 7 年来的流失玩家</li>
+  </ul>
+
+  <h3>10.3 一个创意提案</h3>
+  <div class="callout">
+    <strong>「全民共建 · 国服纪念城市」计划</strong><br><br>
+    在 TapTap 上线一个年度共创项目：官方划定一片超大地图，命名为「国服纪念城」。每月公布一个城区主题（古风街、现代都市、未来科幻、海底世界……），由玩家在服务器中自由投标建造，官方与评审团（核心玩家+建筑大触）每月评选，最佳建筑永久保留并在嘉年华现场 3D 展示。项目可同步推出「建造者徽章」收集体系。<br><br>
+    这个机制的三重价值：一、把「个人晒图」升级为「集体共创」，制造年度级社群事件；二、让服务器/建筑玩家有了持续 12 个月的长期目标，稳定长草期活跃；三、产出的是「看得见、可参观」的永续内容资产，每一座城都是下一年嘉年华的展示素材——<strong>让玩家建造的不只是游戏，而是这个社区共同的历史</strong>。
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<div class="footer">
+  <p>我的世界 Minecraft TapTap 社群运营分析案 · 2026年8月</p>
+  <div class="creeper-sm">
+    <div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div><div class="k"></div><div class="g"></div><div class="g"></div><div class="k"></div>
+    <div class="k"></div><div class="g"></div><div class="k"></div><div class="k"></div><div class="k"></div><div class="k"></div><div class="g"></div><div class="k"></div>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>
